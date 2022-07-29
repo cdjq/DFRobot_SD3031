@@ -1,0 +1,283 @@
+/*!
+ * @file DFRobot_SD3031.h
+ * @brief DFRobot_SD3031 类的实现
+ * @copyright	Copyright (c) 2021 DFRobot Co.Ltd (http://www.dfrobot.com)
+ * @license The MIT License (MIT)
+ * @author [TangJie](jie.tang@dfrobot.com)
+ * @version V1.0
+ * @date 2022-07-25
+ * @url https://github.com/DFRobot/DFRobot_SD3031
+ */
+#include "DFRobot_SD3031.h"
+
+uint8_t DFRobot_SD3031::begin(void)
+{
+  _pWire->begin();
+  _pWire->beginTransmission(_deviceAddr);
+  _pWire->write(SD3031_REG_CTR2);
+  if(_pWire->endTransmission() != 0){
+    DBG("I2C init error!!!!");
+    return 1;
+  }
+  uint8_t data = 0;
+  data = 0x80;
+  writeReg(SD3031_REG_IIC_CON,&data,1);
+  return 0;
+}
+
+void DFRobot_SD3031::setTime(uint16_t year, uint8_t month, uint8_t day,eWeek_t week,uint8_t hour, uint8_t minute, uint8_t second)
+{
+  uint8_t _hour = 0,_year = 0,buffer[7];
+  _year = year-2000;
+  if(_mode == eHours_t::e24hours){
+    _hour=bin2bcd(hour)|0x80;
+  }else{
+    if (hour == 0){
+      _hour = 0x12;
+    }else if (hour >0 && hour < 12){
+      _hour = (0x00|bin2bcd(hour));
+    }else if (hour == 12){
+      _hour = 0x32;
+    }else if (hour >12 && hour < 24){
+      _hour = (0x20|bin2bcd(hour - 12));
+    }
+  }
+  buffer[0]=bin2bcd(second);
+  buffer[1]=bin2bcd(minute);
+  buffer[2]=_hour;
+  buffer[3]=bin2bcd(week);
+  buffer[4]=bin2bcd(day);
+  buffer[5]=bin2bcd(month);
+  buffer[6]=bin2bcd(_year);
+  writeReg(SD3031_REG_SEC,buffer,7); 
+}
+
+sTimeData_t DFRobot_SD3031::getRTCTime(void)
+{
+  sTimeData_t sTime;
+  uint8_t buffer[7];
+  uint8_t data;
+  readReg(SD3031_REG_SEC,buffer,7);
+  sTime.year = 2000+bcd2bin(buffer[6]);
+  sTime.month = bcd2bin(buffer[5]);
+  sTime.day   = bcd2bin(buffer[4]);
+  data = bcd2bin(buffer[3]);
+  switch(data){
+    case eWeek_t::eSunday:
+      sTime.week  ="Sunday";
+    break;
+    case eWeek_t::eMonday:
+      sTime.week  ="Monday";
+    break;
+    case eWeek_t::eTuesday:
+      sTime.week  ="Tuesday";
+    break;
+    case eWeek_t::eWednesday:
+      sTime.week  ="Wednesday";
+    break;
+    case eWeek_t::eThursday:
+      sTime.week  ="Thursday";
+    break;
+    case eWeek_t::eFriday:
+      sTime.week  ="Friday";
+    break;
+    case eWeek_t::eSaturday:
+      sTime.week  ="Saturday";
+    break;
+    default:
+      break;
+  }
+  data = buffer[2];
+  if(_mode == eHours_t::e24hours){
+    sTime.hour = bcd2bin(data&0x7f);
+
+  }else{
+    if(data&0x20){
+        data = data << 3;
+        data = bcd2bin(data >> 3);
+    }
+    else{
+        data = data << 2;
+        data = bcd2bin(data >> 2);
+    }
+    sTime.hour = data;
+  }
+  sTime.minute = bcd2bin(buffer[1]);
+  sTime.second = bcd2bin(buffer[0]);
+  return sTime;
+
+}
+void DFRobot_SD3031::setAlarmnumber(eTrigger_t trigger, uint16_t year, uint8_t month, uint8_t day,eWeek_t week,uint8_t hour, uint8_t minute, uint8_t second)
+{
+  uint8_t buffer[8];
+  uint8_t _hour = 0,_year = 0;
+  uint8_t data = 0;
+  data = 0x80;
+  writeReg(SD3031_REG_CTR3,&data,1);
+  data = 0x92;
+  writeReg(SD3031_REG_CTR2,&data,1);
+  _year = year-2000;
+  if (hour == 0){
+    _hour = 0x12;
+  }else if (hour >0 && hour < 12){
+    _hour = (0x00|bin2bcd(hour));
+  }else if (hour == 12){
+    _hour = 0x32;
+  }else if (hour >12 && hour < 24){
+    _hour = (0x20|bin2bcd(hour - 12));
+  }
+  buffer[0]=bin2bcd(second);
+  buffer[1]=bin2bcd(minute);
+  buffer[2]=_hour;
+  buffer[3]=1<<week;
+  buffer[4]=bin2bcd(day);
+  buffer[5]=bin2bcd(month);
+  buffer[6]=bin2bcd(_year);
+  buffer[7]=trigger;
+  writeReg(SD3031_REG_ALARM_SEC,buffer,8);
+}
+
+
+int8_t DFRobot_SD3031::getTemperatureC(void)
+{
+  int8_t buffer[23];
+  int8_t data = 0;
+  readReg(SD3031_REG_SEC,buffer,23);
+  DBG(buffer[22]);
+  data = buffer[22];
+  return data;
+}
+
+float DFRobot_SD3031::getVoltage(void)
+{
+  uint8_t buffer[27];
+  uint16_t data = 0;
+  float ret = 0.0;
+  readReg(SD3031_REG_SEC,buffer,27);
+  data = ((buffer[25]&0x80)<<8)|buffer[26];
+  ret = data/100.0;
+  return ret;
+}
+
+void DFRobot_SD3031::clearAlarm(void)
+{
+  uint8_t buffer[17];
+  readReg(SD3031_REG_SEC,buffer,17);
+}
+
+
+uint8_t DFRobot_SD3031::writeReg(uint8_t reg, void* pBuf, size_t size)
+{
+  if(pBuf == NULL){
+    DBG("pBuf ERROR!! : null pointer");
+  }
+  uint8_t * _pBuf = (uint8_t *)pBuf;
+  _pWire->beginTransmission(_deviceAddr);
+  _pWire->write(SD3031_REG_CTR2);//给WRTC1位写1
+  _pWire->write(0X80);
+  _pWire->endTransmission();
+  delay(10);
+  _pWire->beginTransmission(_deviceAddr);
+  _pWire->write(SD3031_REG_CTR1);//给WRTC2和WRTC3位写1
+  _pWire->write(0xff);//给WRTC2和WRTC3位写1
+  _pWire->endTransmission();
+  delay(10);
+  _pWire->beginTransmission(_deviceAddr);
+  _pWire->write(&reg,1);
+  for(uint16_t i = 0; i < size; i++){
+    _pWire->write(_pBuf[i]);
+  }
+  _pWire->endTransmission();
+  delay(10);
+  _pWire->beginTransmission(_deviceAddr);
+  _pWire->write(SD3031_REG_CTR1);//给WRTC2和WRTC3位写0
+  _pWire->write(0x7B);
+  _pWire->endTransmission();
+  delay(10);
+  _pWire->beginTransmission(_deviceAddr);
+  _pWire->write(SD3031_REG_CTR2);//给WRTC1位写1
+  _pWire->write(0X12);////给WRTC1位写0
+  if( _pWire->endTransmission() != 0){
+    return 1;
+  }else{
+    return 0;
+  }
+}
+
+uint8_t DFRobot_SD3031::readReg(uint8_t reg, void* pBuf, size_t size)
+{
+  if(pBuf == NULL){
+    DBG("pBuf ERROR!! : null pointer");
+  }
+  uint8_t * _pBuf = (uint8_t *)pBuf;
+  _pWire->beginTransmission(_deviceAddr);
+  _pWire->write(&reg,1);
+    
+  if( _pWire->endTransmission() != 0){
+    return 0;
+  }
+  delay(10);
+  _pWire->requestFrom(_deviceAddr, (uint8_t) size);
+  for(uint16_t i = 0; i < size; i++){
+    _pBuf[i] = _pWire->read();
+  }
+  return size;
+}
+
+uint8_t DFRobot_SD3031::bcd2bin(uint8_t val)
+{
+    return val - 6 * (val >> 4);
+}
+
+uint8_t DFRobot_SD3031::bin2bcd (uint8_t val)
+{
+    return val + 6 * (val / 10);
+}
+String DFRobot_SD3031::getAMorPM(){
+  uint8_t buffer[7];
+  uint8_t data;
+  String ret;
+  readReg(SD3031_REG_SEC, buffer, 7);
+  data = buffer[2];
+  if(data&0x20){
+    ret = "PM";
+  }else{
+    ret = "AM";
+  }
+  return ret;
+}
+
+void DFRobot_SD3031::enable32k()
+{
+  uint8_t flag1 = 0;
+  uint8_t buffer[18];
+  readReg(SD3031_REG_SEC, buffer, 18);
+  flag1 = buffer[17]&0x00;
+  writeReg(SD3031_REG_CTR3,&flag1,1);
+}
+
+void DFRobot_SD3031::disable32k()
+{
+  uint8_t flag1 = 0;
+  uint8_t buffer[18];
+  readReg(SD3031_REG_SEC, buffer, 18);
+  flag1 = buffer[17]&0x40;
+  writeReg(SD3031_REG_CTR3,&flag1,1);
+  DBG(buffer[17]);
+}
+
+uint8_t DFRobot_SD3031::writeSRAM(uint8_t reg, uint8_t data){
+  return writeReg(reg, &data, 1);
+}
+
+uint8_t DFRobot_SD3031::readSRAM(uint8_t reg){
+  uint8_t buf[133];
+  readReg(reg, buf, 1);
+
+  return buf[0];
+}
+
+uint8_t DFRobot_SD3031::clearSRAM(uint8_t reg){
+  uint8_t buf = 0xff;
+  return writeReg(reg, &buf, 1);
+}

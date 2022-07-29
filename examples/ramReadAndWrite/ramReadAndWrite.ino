@@ -1,4 +1,3 @@
-
 /*!
  * @file getTimeAndTemperature.ino
  * @brief 运行这个例程，对RTC模块中RAM数据进行读写
@@ -21,20 +20,19 @@ void setup()
         Serial.println("Failed to init chip, please check if the chip connection is fine. ");
         delay(1000);
     }
-    rtc.writeSRAM(0x2b,2);
+    rtc.writeSRAM(0x2D,2);
     //rtc.enable32k();
     delay(1000);
     //rtc.disable32k();
-    data = rtc.readSRAM(0x2b);
+    data = rtc.readSRAM(0x2D);
     Serial.print("data:");
     Serial.println(data);
     delay(100);
-    rtc.clearSRAM(0x2b);
+    rtc.clearSRAM(0x2D);
     delay(100);
-    data = rtc.readSRAM(0x2C);
+    data = rtc.readSRAM(0x2D);
     Serial.print("data:");
     Serial.println(data);
-    
 }
 
 void loop()

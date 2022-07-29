@@ -107,16 +107,35 @@ sTimeData_t DFRobot_SD3031::getRTCTime(void)
   return sTime;
 
 }
-void DFRobot_SD3031::setAlarmnumber(eTrigger_t trigger, uint16_t year, uint8_t month, uint8_t day,eWeek_t week,uint8_t hour, uint8_t minute, uint8_t second)
+void DFRobot_SD3031::setAlarm(uint16_t year, uint8_t month, uint8_t day)
 {
   uint8_t buffer[8];
-  uint8_t _hour = 0,_year = 0;
+  uint8_t _year = 0;
   uint8_t data = 0;
   data = 0x80;
   writeReg(SD3031_REG_CTR3,&data,1);
   data = 0x92;
   writeReg(SD3031_REG_CTR2,&data,1);
   _year = year-2000;
+  buffer[0]=0;
+  buffer[1]=0;
+  buffer[2]=0;
+  buffer[3]=0;
+  buffer[4]=bin2bcd(day);
+  buffer[5]=bin2bcd(month);
+  buffer[6]=bin2bcd(_year);
+  buffer[7]=0x70;
+  writeReg(SD3031_REG_ALARM_SEC,buffer,8);
+}
+void DFRobot_SD3031::setAlarm(uint8_t week,uint8_t hour, uint8_t minute, uint8_t second)
+{
+  uint8_t buffer[8];
+  uint8_t _hour = 0;
+  uint8_t data = 0;
+  data = 0x80;
+  writeReg(SD3031_REG_CTR3,&data,1);
+  data = 0x92;
+  writeReg(SD3031_REG_CTR2,&data,1);
   if (hour == 0){
     _hour = 0x12;
   }else if (hour >0 && hour < 12){
@@ -129,40 +148,40 @@ void DFRobot_SD3031::setAlarmnumber(eTrigger_t trigger, uint16_t year, uint8_t m
   buffer[0]=bin2bcd(second);
   buffer[1]=bin2bcd(minute);
   buffer[2]=_hour;
-  buffer[3]=1<<week;
-  buffer[4]=bin2bcd(day);
-  buffer[5]=bin2bcd(month);
-  buffer[6]=bin2bcd(_year);
-  buffer[7]=trigger;
+  buffer[3]=week;
+  buffer[4]=0;
+  buffer[5]=0;
+  buffer[6]=0;
+  buffer[7]=0x0f;
   writeReg(SD3031_REG_ALARM_SEC,buffer,8);
 }
 
 
 int8_t DFRobot_SD3031::getTemperatureC(void)
 {
-  int8_t buffer[23];
+  int8_t buffer[2];
   int8_t data = 0;
-  readReg(SD3031_REG_SEC,buffer,23);
-  DBG(buffer[22]);
-  data = buffer[22];
+  readReg(SD3031_REG_TEMP,buffer,1);
+  DBG(buffer[0]);
+  data = buffer[0];
   return data;
 }
 
 float DFRobot_SD3031::getVoltage(void)
 {
-  uint8_t buffer[27];
+  uint8_t buffer[2];
   uint16_t data = 0;
   float ret = 0.0;
-  readReg(SD3031_REG_SEC,buffer,27);
-  data = ((buffer[25]&0x80)<<8)|buffer[26];
+  readReg(SD3031_REG_BAT_VAL,buffer,2);
+  data = (((buffer[0]&0x80)>>7)<<8)|buffer[1];
   ret = data/100.0;
   return ret;
 }
 
 void DFRobot_SD3031::clearAlarm(void)
 {
-  uint8_t buffer[17];
-  readReg(SD3031_REG_SEC,buffer,17);
+  uint8_t buffer[2];
+  readReg(SD3031_REG_CTR1,buffer,1);
 }
 
 
@@ -213,7 +232,7 @@ uint8_t DFRobot_SD3031::readReg(uint8_t reg, void* pBuf, size_t size)
   _pWire->beginTransmission(_deviceAddr);
   _pWire->write(&reg,1);
     
-  if( _pWire->endTransmission() != 0){
+  if( _pWire->endTransmission(false) != 0){
     return 0;
   }
   delay(10);
@@ -250,20 +269,23 @@ String DFRobot_SD3031::getAMorPM(){
 void DFRobot_SD3031::enable32k()
 {
   uint8_t flag1 = 0;
-  uint8_t buffer[18];
-  readReg(SD3031_REG_SEC, buffer, 18);
-  flag1 = buffer[17]&0x00;
+  uint8_t data;
+  readReg(SD3031_REG_CTR3, &data, 1);
+  flag1 = data&0x00;
   writeReg(SD3031_REG_CTR3,&flag1,1);
+  readReg(SD3031_REG_CTR3, &data, 1);
+  DBG(data);
 }
 
 void DFRobot_SD3031::disable32k()
 {
   uint8_t flag1 = 0;
-  uint8_t buffer[18];
-  readReg(SD3031_REG_SEC, buffer, 18);
-  flag1 = buffer[17]&0x40;
+  uint8_t data;
+  readReg(SD3031_REG_CTR3, &data, 1);
+  flag1 = data|0x40;
   writeReg(SD3031_REG_CTR3,&flag1,1);
-  DBG(buffer[17]);
+  readReg(SD3031_REG_CTR3, &data, 1);
+  DBG(data);
 }
 
 uint8_t DFRobot_SD3031::writeSRAM(uint8_t reg, uint8_t data){
@@ -271,13 +293,35 @@ uint8_t DFRobot_SD3031::writeSRAM(uint8_t reg, uint8_t data){
 }
 
 uint8_t DFRobot_SD3031::readSRAM(uint8_t reg){
-  uint8_t buf[133];
+  uint8_t buf[2];
   readReg(reg, buf, 1);
-
   return buf[0];
 }
 
 uint8_t DFRobot_SD3031::clearSRAM(uint8_t reg){
   uint8_t buf = 0xff;
   return writeReg(reg, &buf, 1);
+}
+
+void DFRobot_SD3031::countDown(uint32_t second)
+{
+  uint8_t data = 0;
+  uint8_t buffer[3];
+  uint32_t _second = 0;
+  if(second > 0xffffff)
+  {
+    _second = 0xffffff;
+  }
+  
+  data = 0x80;
+  writeReg(SD3031_REG_CTR2,&data,1);
+  data = 0xB4;
+  writeReg(SD3031_REG_CTR2,&data,1);
+  data = 0x20;
+  writeReg(SD3031_REG_CTR3,&data,1);
+  buffer[0] = _second &0xff;
+  buffer[1] = (_second>>8)&0xff;
+  buffer[2] = (_second>>16)&0xff;
+  writeReg(SD3031_REG_COUNTDOWM,buffer,3);
+
 }

@@ -15,7 +15,7 @@
 #include "Arduino.h"
 #include "Wire.h"
 
-//#define ENABLE_DBG ///< 打开这个宏, 可以看到程序的详细运行过程
+#define ENABLE_DBG ///< 打开这个宏, 可以看到程序的详细运行过程
 #ifdef ENABLE_DBG
 #define DBG(...) {Serial.print("[");Serial.print(__FUNCTION__); Serial.print("(): "); Serial.print(__LINE__); Serial.print(" ] "); Serial.println(__VA_ARGS__);}
 #else
@@ -56,6 +56,7 @@ class DFRobot_SD3031
   #define SD3031_REG_CTR1          0x0F  ///< 控制寄存器1
   #define SD3031_REG_CTR2          0x10  ///< 控制寄存器2
   #define SD3031_REG_CTR3          0x11  ///< 控制寄存器3
+  #define SD3031_REG_COUNTDOWM     0X13  ///< 倒计时寄存器
   #define SD3031_REG_TEMP          0x16  ///< 内部温度寄存器
    #define SD3031_REG_IIC_CON      0x17  ///< IIC控制
   #define SD3031_REG_BAT_VAL       0x1A  ///< 电池电量
@@ -142,19 +143,28 @@ public:
 
 
   /**
-   * @fn setAlarmnumber
+   * @fn setAlarm
    * @brief 设置触发报警的数据
-   * @param trigger 中断选择
    * @param year 2000~2099
    * @param month 1~12
    * @param day 1~31
-   * @param week 0~6
+   * @return None
+   */
+  void setAlarm(uint16_t year, uint8_t month, uint8_t day);
+  /**
+   * @fn setAlarm
+   * @brief Set the Alarmnumber object
+   * @param week 
+   * @n ---------------------------------------------------------------------------------------------------------
+   * @n |    bit7    |    bit6    |    bit5    |    bit4    |    bit3    |    bit2    |    bit1    |    bit0    |
+   * @n ---------------------------------------------------------------------------------------------------------
+   * @n |            |  Saturday  |  Friday    |  Thursday  | Wednesday  |  Tuesday   |  Monday    |  Sunday    |
+   * @n ---------------------------------------------------------------------------------------------------------                  
    * @param hour 0~23
    * @param minute 0~59
    * @param second 0~59
-   * @return None
    */
-  void setAlarmnumber(eTrigger_t trigger, uint16_t year, uint8_t month, uint8_t day,eWeek_t week,uint8_t hour, uint8_t minute, uint8_t second);
+  void setAlarm(uint8_t week,uint8_t hour, uint8_t minute, uint8_t second);
 
   /**
    * @brief 获取时钟内部温度
@@ -216,6 +226,12 @@ public:
    * @return true means clear is successful, false means clear is failed
    */
   uint8_t clearSRAM(uint8_t addr);
+  
+  /**
+   * @brief 倒计时
+   * @param second  倒计时时间 0~0xffffff
+   */
+  void countDown(uint32_t second);
 
 private:
   TwoWire *_pWire;

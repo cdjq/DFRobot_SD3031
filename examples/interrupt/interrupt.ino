@@ -23,8 +23,11 @@ void setup()
         delay(1000);
     }
     rtc.setHourSystem(rtc.e12hours);//设置显示格式
-    rtc.setTime(2021,7,27,rtc.eWednesday,12,58,50);//设置默认时间
-    rtc.setAlarmnumber(rtc.eMinuteEnable,2021,7,27,rtc.eWednesday,12,59,0);//中断设置
+    rtc.setTime(2022,7,27,rtc.eWednesday,23,59,50);//设置默认时间
+    //rtc.countDown(3);//倒计时中断
+    //rtc.setAlarm(2022,7,28);//设置日程报警
+    rtc.setAlarm(0x7f,13,28,0);//设置每天定时播报
+
     #if defined(ESP32) || defined(ESP8266)||defined(ARDUINO_SAM_ZERO)
     attachInterrupt(digitalPinToInterrupt(D6)/*Query the interrupt number of the D6 pin*/,interrupt,FALLING);
     #else

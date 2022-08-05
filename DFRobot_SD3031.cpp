@@ -311,6 +311,9 @@ void DFRobot_SD3031::countDown(uint32_t second)
   if(second > 0xffffff)
   {
     _second = 0xffffff;
+  }else{
+    _second = second;
+  
   }
   
   data = 0x80;

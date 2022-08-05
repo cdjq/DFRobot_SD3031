@@ -1,6 +1,6 @@
 /*!
- * @file getTimeAndTemperature.ino
- * @brief 运行这个例程，对RTC模块中RAM数据进行读写
+ * @file control32k.ino
+ * @brief 运行这个例程，控制32K引脚输出
  * @copyright    Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @licence      The MIT License (MIT)
  * @author       [TangJie](jie.tang@dfrobot.com)
@@ -20,17 +20,10 @@ void setup()
         Serial.println("Failed to init chip, please check if the chip connection is fine. ");
         delay(1000);
     }
-    rtc.writeSRAM(0x2D,2);
+    
+    rtc.enable32k();
     delay(1000);
-    data = rtc.readSRAM(0x2D);
-    Serial.print("data:");
-    Serial.println(data);
-    delay(100);
-    rtc.clearSRAM(0x2D);
-    delay(100);
-    data = rtc.readSRAM(0x2D);
-    Serial.print("data:");
-    Serial.println(data);
+    rtc.disable32k();
 }
 
 void loop()

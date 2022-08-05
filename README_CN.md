@@ -143,6 +143,12 @@ SD3031是一款低成本、极其精确的I2C实时时钟(RTC)模块。在整个
    * @return true 意味着清除SRAM是成功的, false 意味着清除SRAM是失败的
    */
   uint8_t clearSRAM(uint8_t addr);
+  
+  /**
+   * @brief 倒计时
+   * @param second  倒计时时间 0~0xffffff
+   */
+  void countDown(uint32_t second);
 ```
 
 ## 兼容性

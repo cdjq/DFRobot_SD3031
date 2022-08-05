@@ -1,6 +1,6 @@
 /*!
- * @file getTimeAndTemperature.ino
- * @brief 运行这个例程，先设置内部时钟和中断触发，当时间到达定时时间触发中断
+ * @file countDown.ino
+ * @brief 运行这个例程，实现倒计时
  * @copyright    Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @licence      The MIT License (MIT)
  * @author       [TangJie](jie.tang@dfrobot.com)
@@ -8,26 +8,19 @@
  * @date         2022-07-27
  * @url         https://github.com/DFRobot/DFRobot_SD3031
  */
-
 #include "DFRobot_SD3031.h"
-volatile  int8_t alarmFlag = 0;
-DFRobot_SD3031 rtc;
 
-#define PIN 2
+DFRobot_SD3031 rtc;
+volatile  int8_t alarmFlag = 0;
 void setup()
 {
+    uint8_t data= 0;
     Serial.begin(115200);
     /*Wait for the chip to be initialized completely, and then exit*/
     while(rtc.begin() != 0){
         Serial.println("Failed to init chip, please check if the chip connection is fine. ");
         delay(1000);
     }
-    rtc.setHourSystem(rtc.e12hours);//设置显示格式
-    rtc.setTime(2022,7,27,rtc.eWednesday,13,27,50);//设置默认时间
-    //rtc.countDown(3);//倒计时中断
-    //rtc.setAlarm(2022,7,28);//设置日程报警
-    rtc.setAlarm(0x7f,13,28,0);//设置每天定时播报
-
     #if defined(ESP32) || defined(ESP8266)||defined(ARDUINO_SAM_ZERO)
     attachInterrupt(digitalPinToInterrupt(D6)/*Query the interrupt number of the D6 pin*/,interrupt,FALLING);
     #else
@@ -53,42 +46,20 @@ void setup()
     * |no need to set it to input mode with pinMode)|Interrupt No|Interrupt number is a pin digital value, such as P0 interrupt number 0, P1 is 1 |
     * |-------------------------------------------------------------------------------------------------------------------------------------------|
     */
-    attachInterrupt(digitalPinToInterrupt(2), interrupt, FALLING);
+    attachInterrupt(digitalPinToInterrupt(2), interrupt, CHANGE);
     #endif
+    rtc.countDown(10);
+    Serial.println("start");
 }
 
 void loop()
-{ 
-    sTimeData_t sTime;
-    sTime = rtc.getRTCTime();
-    Serial.print(sTime.year, DEC);//year
-    Serial.print('/');
-    Serial.print(sTime.month, DEC);//month
-    Serial.print('/');
-    Serial.print(sTime.day, DEC);//day
-    Serial.print(" (");
-    Serial.print(sTime.week);//week
-    Serial.print(") ");
-    Serial.print(sTime.hour, DEC);//hour
-    Serial.print(':');
-    Serial.print(sTime.minute, DEC);//minute
-    Serial.print(':');
-    Serial.print(sTime.second, DEC);//second
-    Serial.println(' ');
-    /*if rtc works in 24hours mode,this function doesn't print anything*/
-    Serial.print(rtc.getAMorPM());
-    Serial.println();
-     if(alarmFlag == 1){
-        rtc.clearAlarm();
+{
+    if(alarmFlag == 1){
+        rtc.countDown(10);
         alarmFlag = 0;
-        Serial.println("Alarm clock is triggered.");
-        delay(1000);
-        
-    }else{
-      delay(1000);
-    }  
+        Serial.println("Alarm clock is triggered.");   
+    } 
 }
-
 void interrupt(void)
 {
     alarmFlag = 1;

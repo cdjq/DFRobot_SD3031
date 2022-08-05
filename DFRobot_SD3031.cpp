@@ -79,25 +79,25 @@ sTimeData_t DFRobot_SD3031::getRTCTime(void)
   sTime.day   = bcd2bin(buffer[4]);
   data = bcd2bin(buffer[3]);
   switch(data){
-    case eWeek_t::eSunday:
+    case 0:
       sTime.week  ="Sunday";
     break;
-    case eWeek_t::eMonday:
+    case 1:
       sTime.week  ="Monday";
     break;
-    case eWeek_t::eTuesday:
+    case 2:
       sTime.week  ="Tuesday";
     break;
-    case eWeek_t::eWednesday:
+    case 3:
       sTime.week  ="Wednesday";
     break;
-    case eWeek_t::eThursday:
+    case 4:
       sTime.week  ="Thursday";
     break;
-    case eWeek_t::eFriday:
+    case 5
       sTime.week  ="Friday";
     break;
-    case eWeek_t::eSaturday:
+    case 6:
       sTime.week  ="Saturday";
     break;
     default:

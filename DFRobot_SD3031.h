@@ -15,7 +15,7 @@
 #include "Arduino.h"
 #include "Wire.h"
 
-//#define ENABLE_DBG ///< 打开这个宏, 可以看到程序的详细运行过程
+#define ENABLE_DBG ///< 打开这个宏, 可以看到程序的详细运行过程
 #ifdef ENABLE_DBG
 #define DBG(...) {Serial.print("[");Serial.print(__FUNCTION__); Serial.print("(): "); Serial.print(__LINE__); Serial.print(" ] "); Serial.println(__VA_ARGS__);}
 #else
@@ -76,13 +76,15 @@ public:
    * @brief 星期枚举定义
    */
   typedef enum{
-    eSunday    = 0,
-    eMonday    = 1,
-    eTuesday   = 2,
-    eWednesday = 3,
-    eThursday  = 4,
-    eFriday    = 5,
-    eSaturday  = 6
+    eSunday    = 0x01,
+    eMonday    = 0x02,
+    eTuesday   = 0x04,
+    eWednesday = 0x08,
+    eThursday  = 0x10,
+    eFriday    = 0x20,
+    eSaturday  = 0x40,
+    eEveryDay  = 0x7f,
+    eWorkday   = 0x3e,
   }eWeek_t;
 
 
@@ -205,7 +207,7 @@ public:
   /**
    * @fn writeSRAM
    * @brief write the SRAM
-   * @param addr 0x14~0xFF
+   * @param addr 0x2c~0x0x71
    * @param data uint8_t HEX
    * @return true means write is successful, false means write is failed
    */
@@ -214,7 +216,7 @@ public:
   /**
    * @fn readSRAM
    * @brief readthe SRAM
-   * @param addr 0x14~0xFF
+   * @param addr 0x2c~0x0x71
    * @return data store in the SRAM
    */
   uint8_t readSRAM(uint8_t addr);
@@ -222,7 +224,7 @@ public:
   /**
    * @fn clearSRAM
    * @brief clear the SRAM
-   * @param addr 0x14~0xFF
+   * @param addr 0x2c~0x0x71
    * @return true means clear is successful, false means clear is failed
    */
   uint8_t clearSRAM(uint8_t addr);

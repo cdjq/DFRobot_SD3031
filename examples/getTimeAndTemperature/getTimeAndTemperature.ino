@@ -21,7 +21,7 @@ void setup()
         Serial.println("Failed to init chip, please check if the chip connection is fine. ");
         delay(1000);
     }
-    rtc.setHourSystem(rtc.e12hours);//设置已12小时显示
+    rtc.setHourSystem(rtc.e24hours);//设置已12小时显示
     rtc.setTime(2021,7,27,14,59,0);//初始化时间
 }
 
@@ -44,7 +44,7 @@ void loop()
     Serial.print(':');
     Serial.print(sTime.second, DEC);//second
     Serial.println(' ');
-    /*if rtc works in 24hours mode,this function doesn't print anything*/
+    /*如果使用24小时格式，这个使用*/
     Serial.print(rtc.getAMorPM());
     Serial.println();
     if(state == 59){//在电源供电下每个60秒获取一次

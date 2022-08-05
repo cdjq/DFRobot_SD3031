@@ -22,11 +22,11 @@ void setup()
         Serial.println("Failed to init chip, please check if the chip connection is fine. ");
         delay(1000);
     }
-    rtc.setHourSystem(rtc.e12hours);//设置显示格式
+    rtc.setHourSystem(rtc.e24hours);//设置显示格式
     rtc.setTime(2022,7,27,13,27,50);//设置默认时间
     //rtc.countDown(3);//倒计时中断
     //rtc.setAlarm(2022,7,28);//设置日程报警
-    rtc.setAlarm(0x7f,13,28,0);//设置每天定时播报
+    rtc.setAlarm(rtc.eEveryDay,13,28,0);//设置每天定时播报
 
     #if defined(ESP32) || defined(ESP8266)||defined(ARDUINO_SAM_ZERO)
     attachInterrupt(digitalPinToInterrupt(D6)/*Query the interrupt number of the D6 pin*/,interrupt,FALLING);
@@ -75,8 +75,8 @@ void loop()
     Serial.print(':');
     Serial.print(sTime.second, DEC);//second
     Serial.println(' ');
-    /*if rtc works in 24hours mode,this function doesn't print anything*/
-    Serial.print(rtc.getAMorPM());
+    /*如果使用24小时格式，这个使用*/
+    //Serial.print(rtc.getAMorPM());
     Serial.println();
      if(alarmFlag == 1){
         rtc.clearAlarm();

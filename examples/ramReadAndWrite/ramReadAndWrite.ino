@@ -20,7 +20,7 @@ void setup()
         Serial.println("Failed to init chip, please check if the chip connection is fine. ");
         delay(1000);
     }
-    rtc.writeSRAM(0x2D,2);
+    rtc.writeSRAM(0x2D,2);//地址范围 0x2c~0x71
     delay(1000);
     data = rtc.readSRAM(0x2D);
     Serial.print("data:");

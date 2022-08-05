@@ -139,7 +139,7 @@ public:
    * @param second 0~59
    * @return None
    */
-  void setTime(uint16_t year, uint8_t month, uint8_t day,eWeek_t week,uint8_t hour, uint8_t minute, uint8_t second);
+  void setTime(uint16_t year, uint8_t month, uint8_t day,uint8_t hour, uint8_t minute, uint8_t second);
 
 
   /**

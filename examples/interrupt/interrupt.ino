@@ -23,7 +23,7 @@ void setup()
         delay(1000);
     }
     rtc.setHourSystem(rtc.e12hours);//设置显示格式
-    rtc.setTime(2022,7,27,rtc.eWednesday,13,27,50);//设置默认时间
+    rtc.setTime(2022,7,27,13,27,50);//设置默认时间
     //rtc.countDown(3);//倒计时中断
     //rtc.setAlarm(2022,7,28);//设置日程报警
     rtc.setAlarm(0x7f,13,28,0);//设置每天定时播报

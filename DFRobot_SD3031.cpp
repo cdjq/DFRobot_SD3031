@@ -10,6 +10,20 @@
  */
 #include "DFRobot_SD3031.h"
 
+const uint8_t daysInMonth [] PROGMEM={31,28,31,30,31,30,31,31,30,31,30,31};
+static uint16_t date2days(uint16_t y, uint8_t m, uint8_t d)
+{
+    if (y >= 2000)
+        y -= 2000;                              // Remove year offset
+    uint16_t days = d;                          // Store numbers of days
+
+    for (uint8_t i = 1; i < m; ++i){
+        days += pgm_read_byte(daysInMonth + i - 1); // Add number of days for each month
+    } if (m > 2 && y % 4 == 0)
+        ++days;                                 // Deal with leap years
+    return days + 365 * y + (y + 3) / 4 - 1;    // Return computed value
+}
+
 uint8_t DFRobot_SD3031::begin(void)
 {
   _pWire->begin();
@@ -25,9 +39,9 @@ uint8_t DFRobot_SD3031::begin(void)
   return 0;
 }
 
-void DFRobot_SD3031::setTime(uint16_t year, uint8_t month, uint8_t day,eWeek_t week,uint8_t hour, uint8_t minute, uint8_t second)
+void DFRobot_SD3031::setTime(uint16_t year, uint8_t month, uint8_t day,uint8_t hour, uint8_t minute, uint8_t second)
 {
-  uint8_t _hour = 0,_year = 0,buffer[7];
+  uint8_t _hour = 0,_year = 0,buffer[7],week = 0;
   _year = year-2000;
   if(_mode == eHours_t::e24hours){
     _hour=bin2bcd(hour)|0x80;
@@ -42,6 +56,8 @@ void DFRobot_SD3031::setTime(uint16_t year, uint8_t month, uint8_t day,eWeek_t w
       _hour = (0x20|bin2bcd(hour - 12));
     }
   }
+  week = (date2days(year,month,day)+6)%7;
+
   buffer[0]=bin2bcd(second);
   buffer[1]=bin2bcd(minute);
   buffer[2]=_hour;
@@ -328,3 +344,4 @@ void DFRobot_SD3031::countDown(uint32_t second)
   writeReg(SD3031_REG_COUNTDOWM,buffer,3);
 
 }
+

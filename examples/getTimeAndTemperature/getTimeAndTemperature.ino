@@ -22,7 +22,7 @@ void setup()
         delay(1000);
     }
     rtc.setHourSystem(rtc.e12hours);//设置已12小时显示
-    rtc.setTime(2021,7,27,rtc.eWednesday,14,59,0);//初始化时间
+    rtc.setTime(2021,7,27,14,59,0);//初始化时间
 }
 
 void loop()

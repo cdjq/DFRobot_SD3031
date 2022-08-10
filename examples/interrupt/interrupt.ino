@@ -28,8 +28,10 @@ void setup()
     //rtc.setAlarm(2022,7,28);//设置日程报警
     rtc.setAlarm(rtc.eEveryDay,13,28,0);//设置每天定时播报
 
-    #if defined(ESP32) || defined(ESP8266)||defined(ARDUINO_SAM_ZERO)
-    attachInterrupt(digitalPinToInterrupt(D6)/*Query the interrupt number of the D6 pin*/,interrupt,FALLING);
+    #if defined(ESP32)||defined(ARDUINO_SAM_ZERO)
+      attachInterrupt(digitalPinToInterrupt(D7)/*Query the interrupt number of the D6 pin*/,interrupt,FALLING);
+    #elif defined(ESP8266)
+      attachInterrupt(digitalPinToInterrupt(D5)/*Query the interrupt number of the D6 pin*/,interrupt,FALLING);
     #else
     /*    The Correspondence Table of AVR Series Arduino Interrupt Pins And Terminal Numbers
     * ---------------------------------------------------------------------------------------

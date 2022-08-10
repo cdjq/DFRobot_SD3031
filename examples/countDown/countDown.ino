@@ -21,8 +21,10 @@ void setup()
         Serial.println("Failed to init chip, please check if the chip connection is fine. ");
         delay(1000);
     }
-    #if defined(ESP32) || defined(ESP8266)||defined(ARDUINO_SAM_ZERO)
-    attachInterrupt(digitalPinToInterrupt(D6)/*Query the interrupt number of the D6 pin*/,interrupt,FALLING);
+    #if defined(ESP32)||defined(ARDUINO_SAM_ZERO)
+      attachInterrupt(digitalPinToInterrupt(D7)/*Query the interrupt number of the D6 pin*/,interrupt,FALLING);
+    #elif defined(ESP8266)
+      attachInterrupt(digitalPinToInterrupt(D5)/*Query the interrupt number of the D6 pin*/,interrupt,FALLING);
     #else
     /*    The Correspondence Table of AVR Series Arduino Interrupt Pins And Terminal Numbers
     * ---------------------------------------------------------------------------------------

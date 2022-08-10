@@ -158,14 +158,18 @@ void DFRobot_SD3031::setAlarm(uint8_t week,uint8_t hour, uint8_t minute, uint8_t
   writeReg(SD3031_REG_CTR3,&data,1);
   data = 0x92;
   writeReg(SD3031_REG_CTR2,&data,1);
-  if (hour == 0){
-    _hour = 0x12;
-  }else if (hour >0 && hour < 12){
-    _hour = (0x00|bin2bcd(hour));
-  }else if (hour == 12){
-    _hour = 0x32;
-  }else if (hour >12 && hour < 24){
-    _hour = (0x20|bin2bcd(hour - 12));
+  if(_mode == eHours_t::e24hours){
+    _hour=bin2bcd(hour)|0x80;
+  }else{
+    if (hour == 0){
+      _hour = 0x12;
+    }else if (hour >0 && hour < 12){
+      _hour = (0x00|bin2bcd(hour));
+    }else if (hour == 12){
+      _hour = 0x32;
+    }else if (hour >12 && hour < 24){
+      _hour = (0x20|bin2bcd(hour - 12));
+    }
   }
   buffer[0]=bin2bcd(second);
   buffer[1]=bin2bcd(minute);

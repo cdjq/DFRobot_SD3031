@@ -1,8 +1,8 @@
 /*!
  * @file countDown.ino
- * @brief 运行这个例程，实现倒计时
+ * @brief 运行这个例程，实现倒计时功能
  * @copyright    Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
- * @licence      The MIT License (MIT)
+ * @license      The MIT License (MIT)
  * @author       [TangJie](jie.tang@dfrobot.com)
  * @version      V1.0.0
  * @date         2022-07-27

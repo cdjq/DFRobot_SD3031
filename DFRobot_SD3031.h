@@ -15,7 +15,7 @@
 #include "Arduino.h"
 #include "Wire.h"
 
-#define ENABLE_DBG ///< 打开这个宏, 可以看到程序的详细运行过程
+//#define ENABLE_DBG ///< 打开这个宏, 可以看到程序的详细运行过程
 #ifdef ENABLE_DBG
 #define DBG(...) {Serial.print("[");Serial.print(__FUNCTION__); Serial.print("(): "); Serial.print(__LINE__); Serial.print(" ] "); Serial.println(__VA_ARGS__);}
 #else
@@ -184,6 +184,7 @@ public:
    * @brief 清除报警标志位
    */
   void clearAlarm(void);
+
   /**
    * @fn getAMorPM
    * @brief output AM or PM of time
@@ -204,6 +205,7 @@ public:
    * @return None
    */
   void disable32k();
+
   /**
    * @fn writeSRAM
    * @brief write the SRAM
@@ -230,6 +232,7 @@ public:
   uint8_t clearSRAM(uint8_t addr);
   
   /**
+   * @fn countDown
    * @brief 倒计时
    * @param second  倒计时时间 0~0xffffff
    */

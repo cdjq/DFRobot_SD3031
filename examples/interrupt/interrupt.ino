@@ -2,7 +2,7 @@
  * @file getTimeAndTemperature.ino
  * @brief 运行这个例程，先设置内部时钟和中断触发，当时间到达定时时间触发中断
  * @copyright    Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
- * @licence      The MIT License (MIT)
+ * @license      The MIT License (MIT)
  * @author       [TangJie](jie.tang@dfrobot.com)
  * @version      V1.0.0
  * @date         2022-07-27

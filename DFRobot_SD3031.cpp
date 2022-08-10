@@ -57,7 +57,12 @@ void DFRobot_SD3031::setTime(uint16_t year, uint8_t month, uint8_t day,uint8_t h
     }
   }
   week = (date2days(year,month,day)+6)%7;
-
+  if((week+1) > 6){
+    week = 0;
+  }else{
+    week = week + 1;
+  }
+  DBG(week);
   buffer[0]=bin2bcd(second);
   buffer[1]=bin2bcd(minute);
   buffer[2]=_hour;
@@ -78,6 +83,7 @@ sTimeData_t DFRobot_SD3031::getRTCTime(void)
   sTime.month = bcd2bin(buffer[5]);
   sTime.day   = bcd2bin(buffer[4]);
   data = bcd2bin(buffer[3]);
+  DBG(data);
   switch(data){
     case 0:
       sTime.week  ="Sunday";
@@ -94,7 +100,7 @@ sTimeData_t DFRobot_SD3031::getRTCTime(void)
     case 4:
       sTime.week  ="Thursday";
     break;
-    case 5
+    case 5:
       sTime.week  ="Friday";
     break;
     case 6:

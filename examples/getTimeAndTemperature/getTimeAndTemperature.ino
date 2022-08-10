@@ -3,7 +3,7 @@
  * @file getTimeAndTemperature.ino
  * @brief 运行这个例程，先设置内部时钟，在循环获取时钟和温度电压数据
  * @copyright    Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
- * @licence      The MIT License (MIT)
+ * @license      The MIT License (MIT)
  * @author       [TangJie](jie.tang@dfrobot.com)
  * @version      V1.0.0
  * @date         2022-07-27
@@ -47,6 +47,7 @@ void loop()
     /*如果使用24小时格式，这个使用*/
     Serial.print(rtc.getAMorPM());
     Serial.println();
+    state++;
     if(state == 59){//在电源供电下每个60秒获取一次
       state = 0;
       Serial.print(rtc.getTemperatureC());
@@ -54,6 +55,6 @@ void loop()
       Serial.print(rtc.getVoltage());
       Serial.println(" V");
     }
-    state++;
+    
     delay(1000);
 }

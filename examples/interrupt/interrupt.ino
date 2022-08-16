@@ -77,9 +77,9 @@ void loop()
     Serial.print(':');
     Serial.print(sTime.second, DEC);//second
     Serial.println(' ');
-    /*如果使用24小时格式，这个使用*/
-    //Serial.print(rtc.getAMorPM());
-    Serial.println();
+    /*12小时时制启用*/
+    // Serial.print(rtc.getAMorPM());
+    // Serial.println();
      if(alarmFlag == 1){
         rtc.clearAlarm();
         alarmFlag = 0;

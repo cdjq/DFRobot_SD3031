@@ -13,15 +13,15 @@
 const uint8_t daysInMonth [] PROGMEM={31,28,31,30,31,30,31,31,30,31,30,31};
 static uint16_t date2days(uint16_t y, uint8_t m, uint8_t d)
 {
-    if (y >= 2000)
-        y -= 2000;                              // Remove year offset
-    uint16_t days = d;                          // Store numbers of days
+  if (y >= 2000)
+    y -= 2000;                              // Remove year offset
+  uint16_t days = d;                          // Store numbers of days
 
-    for (uint8_t i = 1; i < m; ++i){
-        days += pgm_read_byte(daysInMonth + i - 1); // Add number of days for each month
-    } if (m > 2 && y % 4 == 0)
-        ++days;                                 // Deal with leap years
-    return days + 365 * y + (y + 3) / 4 - 1;    // Return computed value
+  for (uint8_t i = 1; i < m; ++i){
+    days += pgm_read_byte(daysInMonth + i - 1); // Add number of days for each month
+  } if (m > 2 && y % 4 == 0)
+    ++days;                                 // Deal with leap years
+  return days + 365 * y + (y + 3) / 4 - 1;    // Return computed value
 }
 
 uint8_t DFRobot_SD3031::begin(void)
@@ -39,38 +39,61 @@ uint8_t DFRobot_SD3031::begin(void)
   return 0;
 }
 
-void DFRobot_SD3031::setTime(uint16_t year, uint8_t month, uint8_t day,uint8_t hour, uint8_t minute, uint8_t second)
+void DFRobot_SD3031::setTime(uint16_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t minute, uint8_t second)
 {
-  uint8_t _hour = 0,_year = 0,buffer[7],week = 0;
+  uint8_t _hour = 0, _year = 0, buffer[7], _month = 0, _day = 0, _minute = 0, _second = 0, week = 0;
   _year = year-2000;
+  if(_year >= 99)
+    _year = 99;
+  if(month >= 12)
+    _month = 12;
+  else
+    _month = month;
+  if(day >= 31)
+    _day = 31;
+  else
+    _day = day;
+  if(hour >= 24)
+    _hour = 24;
+  else
+    _hour = hour;
+  if(minute >= 60)
+    _minute = 60;
+  else
+    _minute = minute;
+  if(second >= 60)
+    _second = 60;
+  else
+    _second = second;
+
   if(_mode == eHours_t::e24hours){
-    _hour=bin2bcd(hour)|0x80;
+    _hour=bin2bcd(_hour)|0x80;
   }else{
-    if (hour == 0){
+    if (_hour == 0){
       _hour = 0x12;
-    }else if (hour >0 && hour < 12){
-      _hour = (0x00|bin2bcd(hour));
-    }else if (hour == 12){
+    }else if (_hour >0 && _hour < 12){
+      _hour = (0x00|bin2bcd(_hour));
+    }else if (_hour == 12){
       _hour = 0x32;
-    }else if (hour >12 && hour < 24){
-      _hour = (0x20|bin2bcd(hour - 12));
+    }else if (_hour >12 && _hour < 24){
+      _hour = (0x20|bin2bcd(_hour - 12));
     }
   }
-  week = (date2days(year,month,day)+6)%7;
+  week = (date2days(year, month, day) + 6) % 7;
   if((week+1) > 6){
     week = 0;
   }else{
     week = week + 1;
   }
   DBG(week);
-  buffer[0]=bin2bcd(second);
-  buffer[1]=bin2bcd(minute);
+  buffer[0]=bin2bcd(_second);
+  buffer[1]=bin2bcd(_minute);
   buffer[2]=_hour;
   buffer[3]=bin2bcd(week);
-  buffer[4]=bin2bcd(day);
-  buffer[5]=bin2bcd(month);
+  buffer[4]=bin2bcd(_day);
+  buffer[5]=bin2bcd(_month);
   buffer[6]=bin2bcd(_year);
-  writeReg(SD3031_REG_SEC,buffer,7); 
+  writeReg(SD3031_REG_SEC, buffer, 7); 
 }
 
 sTimeData_t DFRobot_SD3031::getRTCTime(void)
@@ -78,7 +101,7 @@ sTimeData_t DFRobot_SD3031::getRTCTime(void)
   sTimeData_t sTime;
   uint8_t buffer[7];
   uint8_t data;
-  readReg(SD3031_REG_SEC,buffer,7);
+  readReg(SD3031_REG_SEC, buffer, 7);
   sTime.year = 2000+bcd2bin(buffer[6]);
   sTime.month = bcd2bin(buffer[5]);
   sTime.day   = bcd2bin(buffer[4]);
@@ -135,9 +158,9 @@ void DFRobot_SD3031::setAlarm(uint16_t year, uint8_t month, uint8_t day)
   uint8_t _year = 0;
   uint8_t data = 0;
   data = 0x80;
-  writeReg(SD3031_REG_CTR3,&data,1);
+  writeReg(SD3031_REG_CTR3, &data, 1);
   data = 0x92;
-  writeReg(SD3031_REG_CTR2,&data,1);
+  writeReg(SD3031_REG_CTR2, &data, 1);
   _year = year-2000;
   buffer[0]=0;
   buffer[1]=0;
@@ -147,9 +170,9 @@ void DFRobot_SD3031::setAlarm(uint16_t year, uint8_t month, uint8_t day)
   buffer[5]=bin2bcd(month);
   buffer[6]=bin2bcd(_year);
   buffer[7]=0x70;
-  writeReg(SD3031_REG_ALARM_SEC,buffer,8);
+  writeReg(SD3031_REG_ALARM_SEC, buffer, 8);
 }
-void DFRobot_SD3031::setAlarm(uint8_t week,uint8_t hour, uint8_t minute, uint8_t second)
+void DFRobot_SD3031::setAlarm(uint8_t week, uint8_t hour, uint8_t minute, uint8_t second)
 {
   uint8_t buffer[8];
   uint8_t _hour = 0;
@@ -179,7 +202,7 @@ void DFRobot_SD3031::setAlarm(uint8_t week,uint8_t hour, uint8_t minute, uint8_t
   buffer[5]=0;
   buffer[6]=0;
   buffer[7]=0x0f;
-  writeReg(SD3031_REG_ALARM_SEC,buffer,8);
+  writeReg(SD3031_REG_ALARM_SEC, buffer, 8);
 }
 
 
@@ -187,7 +210,7 @@ int8_t DFRobot_SD3031::getTemperatureC(void)
 {
   int8_t buffer[2];
   int8_t data = 0;
-  readReg(SD3031_REG_TEMP,buffer,1);
+  readReg(SD3031_REG_TEMP, buffer, 1);
   DBG(buffer[0]);
   data = buffer[0];
   return data;
@@ -198,16 +221,16 @@ float DFRobot_SD3031::getVoltage(void)
   uint8_t buffer[2];
   uint16_t data = 0;
   float ret = 0.0;
-  readReg(SD3031_REG_BAT_VAL,buffer,2);
-  data = (((buffer[0]&0x80)>>7)<<8)|buffer[1];
-  ret = data/100.0;
+  readReg(SD3031_REG_BAT_VAL, buffer, 2);
+  data = (((buffer[0] & 0x80) >> 7) << 8) | buffer[1];
+  ret = data / 100.0;
   return ret;
 }
 
 void DFRobot_SD3031::clearAlarm(void)
 {
   uint8_t buffer[2];
-  readReg(SD3031_REG_CTR1,buffer,1);
+  readReg(SD3031_REG_CTR1, buffer, 1);
 }
 
 
@@ -256,7 +279,7 @@ uint8_t DFRobot_SD3031::readReg(uint8_t reg, void* pBuf, size_t size)
   }
   uint8_t * _pBuf = (uint8_t *)pBuf;
   _pWire->beginTransmission(_deviceAddr);
-  _pWire->write(&reg,1);
+  _pWire->write(&reg, 1);
     
   if( _pWire->endTransmission(false) != 0){
     return 0;
@@ -298,7 +321,7 @@ void DFRobot_SD3031::enable32k()
   uint8_t data;
   readReg(SD3031_REG_CTR3, &data, 1);
   flag1 = data&0x00;
-  writeReg(SD3031_REG_CTR3,&flag1,1);
+  writeReg(SD3031_REG_CTR3, &flag1, 1);
   readReg(SD3031_REG_CTR3, &data, 1);
   DBG(data);
 }
@@ -309,7 +332,7 @@ void DFRobot_SD3031::disable32k()
   uint8_t data;
   readReg(SD3031_REG_CTR3, &data, 1);
   flag1 = data|0x40;
-  writeReg(SD3031_REG_CTR3,&flag1,1);
+  writeReg(SD3031_REG_CTR3, &flag1, 1);
   readReg(SD3031_REG_CTR3, &data, 1);
   DBG(data);
 }
@@ -343,15 +366,15 @@ void DFRobot_SD3031::countDown(uint32_t second)
   }
   
   data = 0x80;
-  writeReg(SD3031_REG_CTR2,&data,1);
+  writeReg(SD3031_REG_CTR2, &data, 1);
   data = 0xB4;
-  writeReg(SD3031_REG_CTR2,&data,1);
+  writeReg(SD3031_REG_CTR2, &data, 1);
   data = 0x20;
-  writeReg(SD3031_REG_CTR3,&data,1);
-  buffer[0] = _second &0xff;
-  buffer[1] = (_second>>8)&0xff;
-  buffer[2] = (_second>>16)&0xff;
-  writeReg(SD3031_REG_COUNTDOWM,buffer,3);
+  writeReg(SD3031_REG_CTR3, &data, 1);
+  buffer[0] = _second & 0xff;
+  buffer[1] = (_second >> 8) & 0xff;
+  buffer[2] = (_second >> 16) & 0xff;
+  writeReg(SD3031_REG_COUNTDOWM, buffer, 3);
 
 }
 

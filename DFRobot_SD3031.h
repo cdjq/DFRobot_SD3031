@@ -26,14 +26,14 @@
  * @brief 存储时间数据得结构体
  */
 typedef struct{
-    uint16_t year;
-    uint8_t  month;
-    uint8_t  day;
-    String   week;
-    uint8_t  hour;
-    uint8_t minute;
-    uint8_t second;
-  }sTimeData_t;
+  uint16_t year;
+  uint8_t  month;
+  uint8_t  day;
+  String   week;
+  uint8_t  hour;
+  uint8_t minute;
+  uint8_t second;
+}sTimeData_t;
 
 class DFRobot_SD3031
 {
@@ -58,7 +58,7 @@ class DFRobot_SD3031
   #define SD3031_REG_CTR3          0x11  ///< 控制寄存器3
   #define SD3031_REG_COUNTDOWM     0X13  ///< 倒计时寄存器
   #define SD3031_REG_TEMP          0x16  ///< 内部温度寄存器
-   #define SD3031_REG_IIC_CON      0x17  ///< IIC控制
+  #define SD3031_REG_IIC_CON      0x17  ///< IIC控制
   #define SD3031_REG_BAT_VAL       0x1A  ///< 电池电量
 
 public:
@@ -93,10 +93,10 @@ public:
    * @brief  中断定义枚举
    */
   typedef enum{
-    eYearEnable = 0x40,                    
-    eMondayEnable = 0x20,                   
-    eDayEnable = 0x10,            
-    eHoursEnable = 0x04,       
+    eYearEnable = 0x40,
+    eMondayEnable = 0x20,
+    eDayEnable = 0x10,
+    eHoursEnable = 0x04,
     eMinuteEnable = 0x02,
     eSecondEnable =0x01,
   }eTrigger_t;
@@ -141,8 +141,7 @@ public:
    * @param second 0~59
    * @return None
    */
-  void setTime(uint16_t year, uint8_t month, uint8_t day,uint8_t hour, uint8_t minute, uint8_t second);
-
+  void setTime(uint16_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t minute, uint8_t second);
 
   /**
    * @fn setAlarm

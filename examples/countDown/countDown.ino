@@ -14,7 +14,6 @@ DFRobot_SD3031 rtc;
 volatile  int8_t alarmFlag = 0;
 void setup()
 {
-    uint8_t data= 0;
     Serial.begin(115200);
     /*Wait for the chip to be initialized completely, and then exit*/
     while(rtc.begin() != 0){

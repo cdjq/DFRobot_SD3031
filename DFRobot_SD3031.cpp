@@ -39,61 +39,38 @@ uint8_t DFRobot_SD3031::begin(void)
   return 0;
 }
 
-void DFRobot_SD3031::setTime(uint16_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t minute, uint8_t second)
+void DFRobot_SD3031::setTime(uint16_t year, uint8_t month, uint8_t day,uint8_t hour, uint8_t minute, uint8_t second)
 {
-  uint8_t _hour = 0, _year = 0, buffer[7], _month = 0, _day = 0, _minute = 0, _second = 0, week = 0;
-  _year = year-2000;
-  if(_year >= 99)
-    _year = 99;
-  if(month >= 12)
-    _month = 12;
-  else
-    _month = month;
-  if(day >= 31)
-    _day = 31;
-  else
-    _day = day;
-  if(hour >= 24)
-    _hour = 24;
-  else
-    _hour = hour;
-  if(minute >= 60)
-    _minute = 60;
-  else
-    _minute = minute;
-  if(second >= 60)
-    _second = 60;
-  else
-    _second = second;
-
+  uint8_t _hour = 0, _year = 0, buffer[7], week = 0;
+  _year = year - 2000;
   if(_mode == eHours_t::e24hours){
-    _hour=bin2bcd(_hour)|0x80;
+    _hour=bin2bcd(hour)|0x80;
   }else{
-    if (_hour == 0){
+    if (hour == 0){
       _hour = 0x12;
-    }else if (_hour >0 && _hour < 12){
-      _hour = (0x00|bin2bcd(_hour));
-    }else if (_hour == 12){
+    }else if (hour >0 && hour < 12){
+      _hour = (0x00|bin2bcd(hour));
+    }else if (hour == 12){
       _hour = 0x32;
-    }else if (_hour >12 && _hour < 24){
-      _hour = (0x20|bin2bcd(_hour - 12));
+    }else if (hour >12 && hour < 24){
+      _hour = (0x20|bin2bcd(hour - 12));
     }
   }
   week = (date2days(year, month, day) + 6) % 7;
-  if((week+1) > 6){
+  if((week + 1) > 6){
     week = 0;
   }else{
     week = week + 1;
   }
   DBG(week);
-  buffer[0]=bin2bcd(_second);
-  buffer[1]=bin2bcd(_minute);
+  buffer[0]=bin2bcd(second);
+  buffer[1]=bin2bcd(minute);
   buffer[2]=_hour;
   buffer[3]=bin2bcd(week);
-  buffer[4]=bin2bcd(_day);
-  buffer[5]=bin2bcd(_month);
+  buffer[4]=bin2bcd(day);
+  buffer[5]=bin2bcd(month);
   buffer[6]=bin2bcd(_year);
-  writeReg(SD3031_REG_SEC, buffer, 7); 
+  writeReg(SD3031_REG_SEC,buffer,7); 
 }
 
 sTimeData_t DFRobot_SD3031::getRTCTime(void)

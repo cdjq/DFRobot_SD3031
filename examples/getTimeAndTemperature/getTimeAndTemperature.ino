@@ -12,7 +12,6 @@
 #include "DFRobot_SD3031.h"
 
 DFRobot_SD3031 rtc;
-uint16_t state= 0;
 void setup()
 {
     Serial.begin(115200);
@@ -23,6 +22,12 @@ void setup()
     }
     rtc.setHourSystem(rtc.e24hours);//设置显示格式
     rtc.setTime(2021,7,27,14,59,0);//初始化时间
+    // //获取内部温度
+    // Serial.print(rtc.getTemperatureC());
+    // Serial.println(" C");
+    // //获取电池电压
+    // Serial.print(rtc.getVoltage());
+    // Serial.println(" V");
 }
 
 void loop()
@@ -47,14 +52,5 @@ void loop()
     /*12小时时制启用*/
     // Serial.print(rtc.getAMorPM());
     // Serial.println();
-    state++;
-    if(state == 59){//在电源供电下每个60秒获取一次
-      state = 0;
-      Serial.print(rtc.getTemperatureC());
-      Serial.println(" C");
-      Serial.print(rtc.getVoltage());
-      Serial.println(" V");
-    }
-    
     delay(1000);
 }

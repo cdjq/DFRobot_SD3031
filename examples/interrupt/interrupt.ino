@@ -27,7 +27,7 @@ void setup()
     //倒计时、日程报警和每天定时报警不能同时使用
     //rtc.countDown(3);//倒计时
     //rtc.setAlarm(2022,7,28);//设置日程报警
-    rtc.setAlarm(rtc.eEveryDay,24,0,0);//设置每天定时报警
+    rtc.setAlarm(rtc.eEveryDay,0,0,0);//设置每天定时报警
 
     #if defined(ESP32)||defined(ARDUINO_SAM_ZERO)
       attachInterrupt(digitalPinToInterrupt(D7)/*Query the interrupt number of the D6 pin*/,interrupt,FALLING);

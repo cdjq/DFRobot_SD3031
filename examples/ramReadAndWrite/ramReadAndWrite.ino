@@ -1,5 +1,5 @@
 /*!
- * @file getTimeAndTemperature.ino
+ * @file ramReadAndWrite.ino
  * @brief 运行这个例程，对RTC模块中RAM数据进行读写
  * @copyright    Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @license      The MIT License (MIT)

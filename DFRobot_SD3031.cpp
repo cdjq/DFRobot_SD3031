@@ -57,11 +57,6 @@ void DFRobot_SD3031::setTime(uint16_t year, uint8_t month, uint8_t day,uint8_t h
     }
   }
   week = (date2days(year, month, day) + 6) % 7;
-  if((week + 1) > 6){
-    week = 0;
-  }else{
-    week = week + 1;
-  }
   DBG(week);
   buffer[0]=bin2bcd(second);
   buffer[1]=bin2bcd(minute);

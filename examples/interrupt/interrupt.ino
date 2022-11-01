@@ -1,5 +1,5 @@
 /*!
- * @file getTimeAndTemperature.ino
+ * @file interrupt.ino
  * @brief 运行这个例程，先设置内部时钟和中断触发，当时间到达定时时间触发中断
  * @copyright    Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @license      The MIT License (MIT)
@@ -23,10 +23,11 @@ void setup()
         delay(1000);
     }
     rtc.setHourSystem(rtc.e24hours);//设置显示格式
-    rtc.setTime(2022,7,27,13,27,50);//设置默认时间
-    //rtc.countDown(3);//倒计时中断，倒计时中断和报警中断不能同事使用
-    //rtc.setAlarm(2022,7,28);//设置日程报警，日程报警也不能和每天定时报警同事使用
-    rtc.setAlarm(rtc.eEveryDay,13,28,0);//设置每天定时播报
+    rtc.setTime(2022,7,27,23,59,55);//设置默认时间
+    //倒计时、日程报警和每天定时报警不能同时使用
+    //rtc.countDown(3);//倒计时
+    //rtc.setAlarm(2022,7,28);//设置日程报警
+    rtc.setAlarm(rtc.eEveryDay,24,0,0);//设置每天定时报警
 
     #if defined(ESP32)||defined(ARDUINO_SAM_ZERO)
       attachInterrupt(digitalPinToInterrupt(D7)/*Query the interrupt number of the D6 pin*/,interrupt,FALLING);

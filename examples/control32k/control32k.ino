@@ -1,6 +1,6 @@
 /*!
  * @file control32k.ino
- * @brief 运行这个例程，控制32K引脚是否输出32K波
+ * @brief 运行这个例程，控制32K引脚输出方波
  * @copyright    Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @license      The MIT License (MIT)
  * @author       [TangJie](jie.tang@dfrobot.com)

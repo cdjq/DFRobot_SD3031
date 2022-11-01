@@ -1,6 +1,6 @@
 
 /*!
- * @file getTimeAndTemperature.ino
+ * @file getTime.ino
  * @brief 运行这个例程，先设置内部时钟，在循环获取时钟和温度电压数据
  * @copyright    Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @license      The MIT License (MIT)

@@ -1,6 +1,6 @@
 /*!
  * @file ramReadAndWrite.ino
- * @brief 运行这个例程，对RTC模块中RAM数据进行读写
+ * @brief Run this routine to read and write RAM data in the RTC module
  * @copyright    Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @license      The MIT License (MIT)
  * @author       [TangJie](jie.tang@dfrobot.com)
@@ -20,7 +20,7 @@ void setup()
         Serial.println("Failed to init chip, please check if the chip connection is fine. ");
         delay(1000);
     }
-    rtc.writeSRAM(0x2D,2);//地址范围 0x2c~0x71
+    rtc.writeSRAM(0x2D,2);//Address Range 0x2c~0x71
     delay(1000);
     data = rtc.readSRAM(0x2D);
     Serial.print("data:");

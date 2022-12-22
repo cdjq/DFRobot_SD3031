@@ -1,7 +1,7 @@
 
 /*!
  * @file getTime.ino
- * @brief 运行这个例程，先设置内部时钟，在循环获取时钟和温度电压数据
+ * @brief Run this routine, set internal clock first, and then circularly get clock, temperature and voltage data
  * @copyright    Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @license      The MIT License (MIT)
  * @author       [TangJie](jie.tang@dfrobot.com)
@@ -20,12 +20,12 @@ void setup()
         Serial.println("Failed to init chip, please check if the chip connection is fine. ");
         delay(1000);
     }
-    rtc.setHourSystem(rtc.e24hours);//设置显示格式
-    rtc.setTime(2021,7,27,14,59,0);//初始化时间
-    // //获取内部温度
+    rtc.setHourSystem(rtc.e24hours);//Set display format
+    rtc.setTime(2021,7,27,14,59,0);//Initialize time
+    // //Get internal temperature
     // Serial.print(rtc.getTemperatureC());
     // Serial.println(" C");
-    // //获取电池电压
+    // //Get battery voltage
     // Serial.print(rtc.getVoltage());
     // Serial.println(" V");
 }
@@ -49,7 +49,7 @@ void loop()
     Serial.print(':');
     Serial.print(sTime.second, DEC);//second
     Serial.println(' ');
-    /*12小时时制启用*/
+    /*Enable 12-hour time format*/
     // Serial.print(rtc.getAMorPM());
     // Serial.println();
     delay(1000);

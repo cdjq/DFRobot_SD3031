@@ -1,6 +1,6 @@
 /*!
- * @file DFRobot_SD3031.h
- * @brief DFRobot_SD3031 类的实现
+ * @file DFRobot_SD3031.cpp
+ * @brief Implemention of DFRobot_SD3031 class
  * @copyright	Copyright (c) 2021 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @license The MIT License (MIT)
  * @author [TangJie](jie.tang@dfrobot.com)
@@ -213,13 +213,13 @@ uint8_t DFRobot_SD3031::writeReg(uint8_t reg, void* pBuf, size_t size)
   }
   uint8_t * _pBuf = (uint8_t *)pBuf;
   _pWire->beginTransmission(_deviceAddr);
-  _pWire->write(SD3031_REG_CTR2);//给WRTC1位写1
+  _pWire->write(SD3031_REG_CTR2);//Write 1 to WRTC1
   _pWire->write(0X80);
   _pWire->endTransmission();
   delay(10);
   _pWire->beginTransmission(_deviceAddr);
-  _pWire->write(SD3031_REG_CTR1);//给WRTC2和WRTC3位写1
-  _pWire->write(0xff);//给WRTC2和WRTC3位写1
+  _pWire->write(SD3031_REG_CTR1);//Write 1 to WRTC2 & WRTC3
+  _pWire->write(0xff);//Write 1 to WRTC2 & WRTC3
   _pWire->endTransmission();
   delay(10);
   _pWire->beginTransmission(_deviceAddr);
@@ -230,13 +230,13 @@ uint8_t DFRobot_SD3031::writeReg(uint8_t reg, void* pBuf, size_t size)
   _pWire->endTransmission();
   delay(10);
   _pWire->beginTransmission(_deviceAddr);
-  _pWire->write(SD3031_REG_CTR1);//给WRTC2和WRTC3位写0
+  _pWire->write(SD3031_REG_CTR1);//Write 0 to WRTC2 & WRTC3
   _pWire->write(0x7B);
   _pWire->endTransmission();
   delay(10);
   _pWire->beginTransmission(_deviceAddr);
-  _pWire->write(SD3031_REG_CTR2);//给WRTC1位写1
-  _pWire->write(0X12);////给WRTC1位写0
+  _pWire->write(SD3031_REG_CTR2);//Write 1 to WRTC1
+  _pWire->write(0X12);////Write 0 to WRTC1
   if( _pWire->endTransmission() != 0){
     return 1;
   }else{

@@ -1,6 +1,6 @@
 /*!
  * @file interrupt.ino
- * @brief 运行这个例程，先设置内部时钟和中断触发，当时间到达定时时间触发中断
+ * @brief Run this routine, set internal clock and interrupt trigger first, interrupt will be triggered when the set time is reached
  * @copyright    Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @license      The MIT License (MIT)
  * @author       [TangJie](jie.tang@dfrobot.com)
@@ -22,12 +22,12 @@ void setup()
         Serial.println("Failed to init chip, please check if the chip connection is fine. ");
         delay(1000);
     }
-    rtc.setHourSystem(rtc.e24hours);//设置显示格式
-    rtc.setTime(2022,7,27,23,59,55);//设置默认时间
-    //倒计时、日程报警和每天定时报警不能同时使用
-    //rtc.countDown(3);//倒计时
-    //rtc.setAlarm(2022,7,28);//设置日程报警
-    rtc.setAlarm(rtc.eEveryDay,0,0,0);//设置每天定时报警
+    rtc.setHourSystem(rtc.e24hours);//Set display format
+    rtc.setTime(2022,7,27,23,59,55);//Set default time
+    //Countdown timer, schedule alarm and daily timed alarm can't be used at the same time
+    //rtc.countDown(3);//Countdown
+    //rtc.setAlarm(2022,7,28);//Set schedule alarm
+    rtc.setAlarm(rtc.eEveryDay,0,0,0);//Set daily timed alarm
 
     #if defined(ESP32)||defined(ARDUINO_SAM_ZERO)
       attachInterrupt(digitalPinToInterrupt(D7)/*Query the interrupt number of the D6 pin*/,interrupt,FALLING);
@@ -78,7 +78,7 @@ void loop()
     Serial.print(':');
     Serial.print(sTime.second, DEC);//second
     Serial.println(' ');
-    /*12小时时制启用*/
+    /*Enable 12-hour time format*/
     // Serial.print(rtc.getAMorPM());
     // Serial.println();
      if(alarmFlag == 1){

@@ -1,7 +1,7 @@
 /*!
  * @file DFRobot_SD3031.h
- * @brief DFRobot_SD3031 类的基础结构
- * @details 定义SD3031功能的函数
+ * @brief Define the basic structure of class DFRobot_SD3031
+ * @details Define SD3031 functions
  * @copyright	Copyright (c) 2021 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @license The MIT License (MIT)
  * @author [TangJie](jie.tang@dfrobot.com)
@@ -15,7 +15,7 @@
 #include "Arduino.h"
 #include "Wire.h"
 
-//#define ENABLE_DBG ///< 打开这个宏, 可以看到程序的详细运行过程
+//#define ENABLE_DBG ///< Enable this macro to see the detailed running process of the program
 #ifdef ENABLE_DBG
 #define DBG(...) {Serial.print("[");Serial.print(__FUNCTION__); Serial.print("(): "); Serial.print(__LINE__); Serial.print(" ] "); Serial.println(__VA_ARGS__);}
 #else
@@ -23,7 +23,7 @@
 #endif
 /**
  * @struct sTimeData_t
- * @brief 存储时间数据得结构体
+ * @brief Structure for storing time data
  */
 typedef struct{
   uint16_t year;
@@ -37,29 +37,29 @@ typedef struct{
 
 class DFRobot_SD3031
 {
-  #define SD3031_IIC_ADDRESS       0x32  ///< 传感器设备地址
-  #define SD3031_REG_SEC           0x00  ///< 时钟秒寄存器
-  #define SD3031_REG_MIN           0x01  ///< 时钟分寄存器
-  #define SD3031_REG_HOUR          0x02  ///< 时钟小时寄存器
-  #define SD3031_REG_WEEK          0x03  ///< 时钟星期寄存器
-  #define SD3031_REG_DAY           0x04  ///< 时钟日寄存器
-  #define SD3031_REG_MONTE         0x05  ///< 时钟月寄存器
-  #define SD3031_REG_YEAR          0x06  ///< 时钟年寄存器
-  #define SD3031_REG_ALARM_SEC     0x07  ///< 时钟秒报警寄存器
-  #define SD3031_REG_ALARM_MIN     0x08  ///< 时钟分报警寄存器
-  #define SD3031_REG_ALARM_HOUR    0x09  ///< 时钟小时报警寄存器
-  #define SD3031_REG_ALARM_WEEK    0x0A  ///< 时钟星期报警寄存器
-  #define SD3031_REG_ALARM_DAY     0x0B  ///< 时钟日报警寄存器
-  #define SD3031_REG_ALARM_MONNTE  0x0C  ///< 时钟月报警寄存器
-  #define SD3031_REG_ALARM_YEAR    0x0D  ///< 时钟年报警寄存器
-  #define SD3031_REG_ALARM_CON     0x0E  ///< 时钟报警控制寄存器
-  #define SD3031_REG_CTR1          0x0F  ///< 控制寄存器1
-  #define SD3031_REG_CTR2          0x10  ///< 控制寄存器2
-  #define SD3031_REG_CTR3          0x11  ///< 控制寄存器3
-  #define SD3031_REG_COUNTDOWM     0X13  ///< 倒计时寄存器
-  #define SD3031_REG_TEMP          0x16  ///< 内部温度寄存器
-  #define SD3031_REG_IIC_CON      0x17  ///< IIC控制
-  #define SD3031_REG_BAT_VAL       0x1A  ///< 电池电量
+  #define SD3031_IIC_ADDRESS       0x32  ///< Sensor device address
+  #define SD3031_REG_SEC           0x00  ///< RTC Seconds Register
+  #define SD3031_REG_MIN           0x01  ///< RTC Minutes Register
+  #define SD3031_REG_HOUR          0x02  ///< RTC Hours Register
+  #define SD3031_REG_WEEK          0x03  ///< RTC Week Register
+  #define SD3031_REG_DAY           0x04  ///< RTC Day Register
+  #define SD3031_REG_MONTE         0x05  ///< RTC Month Register
+  #define SD3031_REG_YEAR          0x06  ///< RTC Year Register
+  #define SD3031_REG_ALARM_SEC     0x07  ///< RTC Seconds Alarm Register
+  #define SD3031_REG_ALARM_MIN     0x08  ///< RTC Minutes Alarm Register
+  #define SD3031_REG_ALARM_HOUR    0x09  ///< RTC Hours Alarm Register
+  #define SD3031_REG_ALARM_WEEK    0x0A  ///< RTC Week Alarm Register
+  #define SD3031_REG_ALARM_DAY     0x0B  ///< RTC Day Alarm Register
+  #define SD3031_REG_ALARM_MONNTE  0x0C  ///< RTC Month Alarm Register
+  #define SD3031_REG_ALARM_YEAR    0x0D  ///< RTC Year Alarm Register
+  #define SD3031_REG_ALARM_CON     0x0E  ///< RTC Alarm Control Register
+  #define SD3031_REG_CTR1          0x0F  ///< Control Register 1
+  #define SD3031_REG_CTR2          0x10  ///< Control Register 2
+  #define SD3031_REG_CTR3          0x11  ///< Control Register 3
+  #define SD3031_REG_COUNTDOWM     0X13  ///< Countdown Register
+  #define SD3031_REG_TEMP          0x16  ///< Internal Temperature Register
+  #define SD3031_REG_IIC_CON      0x17  ///< I2C Control
+  #define SD3031_REG_BAT_VAL       0x1A  ///< Battery Level
 
 public:
   /**
@@ -73,7 +73,7 @@ public:
 
   /**
    * @enum eWeek_t
-   * @brief 星期枚举定义
+   * @brief Enumerate week definition
    */
   typedef enum{
     eSunday    = 0x01,
@@ -90,7 +90,7 @@ public:
 
   /**
    * @enum  eTrigger_t
-   * @brief  中断定义枚举
+   * @brief  Enumerate interrupt definition
    */
   typedef enum{
     eYearEnable = 0x40,
@@ -111,21 +111,21 @@ public:
 
   /**
    * @fn begin
-   * @brief 初始化传感器
-   * @return 返回初始化状态
+   * @brief Initialize sensor
+   * @return Return init status
    */
   uint8_t begin(void);
 
   /**
    * @fn getRTCTime
-   * @brief 获取时钟模块中的年
-   * @return 返回获取的年份
+   * @brief Get information of year in RTC module
+   * @return Return the obtained year
    */
   sTimeData_t getRTCTime(void);
 
   /**
-   * @brief 设置时钟是24小时制还是12小时制
-   * @param mode 时钟计算方式
+   * @brief Set clock as 24-hour or 12-hour format
+   * @param mode Clock calculation method
    */
   void setHourSystem(eHours_t mode){ _mode = mode; };
 
@@ -145,7 +145,7 @@ public:
 
   /**
    * @fn setAlarm
-   * @brief 设置触发报警的数据
+   * @brief Set the data for triggering alarm
    * @param year 2000~2099
    * @param month 1~12
    * @param day 1~31
@@ -168,26 +168,26 @@ public:
   void setAlarm(uint8_t week,uint8_t hour, uint8_t minute, uint8_t second);
 
   /**
-   * @brief 获取时钟内部温度
-   * @return 返回获取得温度，单位：℃
+   * @brief Get internal temperature of the clock
+   * @return Return the obtained temperature, unit: ℃
    */
   int8_t getTemperatureC(void);
 
   /**
-   * @brief 获取板载电池电压
-   * @return float 返回获取得电压
+   * @brief Get voltage of onboard battery
+   * @return float Return the obtained voltage
    */
   float getVoltage(void);
 
   /**
-   * @brief 清除报警标志位
+   * @brief Clear alarm flag bit
    */
   void clearAlarm(void);
 
   /**
    * @fn getAMorPM
    * @brief output AM or PM of time
-   * @return AM or PM, 24 hours mode return empty string
+   * @return AM or PM, return empty string for 24 hours mode
    */
   String getAMorPM();
 
@@ -218,7 +218,7 @@ public:
    * @fn readSRAM
    * @brief readthe SRAM
    * @param addr 0x2c~0x0x71
-   * @return data store in the SRAM
+   * @return data stored in the SRAM
    */
   uint8_t readSRAM(uint8_t addr);
 
@@ -232,8 +232,8 @@ public:
   
   /**
    * @fn countDown
-   * @brief 倒计时
-   * @param second  倒计时时间 0~0xffffff
+   * @brief Countdown
+   * @param second  countdown time 0~0xffffff
    */
   void countDown(uint32_t second);
 
@@ -244,23 +244,23 @@ private:
 
   /**
    * @fn writeReg
-   * @brief 写寄存器函数，设计为虚函数，由派生类实现函数体
-   * @param reg  寄存器地址 8bits
-   * @param pBuf 要写入数据的存放缓存
-   * @param size 要写入数据的长度
+   * @brief Write register function, designed as virtual function, implemented by derived class
+   * @param reg  Register address 8bits
+   * @param pBuf Storage and buffer for data to be written
+   * @param size Length of data to be written
    * @return None
    */
   uint8_t writeReg(uint8_t reg, void* pBuf, size_t size);
 
   /**
    * @fn readReg
-   * @brief 读取寄存器函数，设计为虚函数，由派生类实现函数体
-   * @param reg  寄存器地址 8bits
-   * @param pBuf 要写入数据的存放缓存
-   * @param size 要写入数据的长度
-   * @return uint8_t类型,表示读寄存器状态返回
-   * @retval 0 读取成功
-   * @retval 1 读取失败
+   * @brief Read register function, designed as virtual function, implemented by derived class
+   * @param reg  Register address 8bits
+   * @param pBuf Storage and buffer for data to be written
+   * @param size Length of data to be written
+   * @return uint8_t type, indicates returning read register status
+   * @retval 0 Reading succeeded
+   * @retval 1 Reading failed
    */
   uint8_t readReg(uint8_t reg, void* pBuf, size_t size);
 

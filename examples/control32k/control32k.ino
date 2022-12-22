@@ -1,6 +1,6 @@
 /*!
  * @file control32k.ino
- * @brief 运行这个例程，控制32K引脚输出方波
+ * @brief Run this routine, control square wave output on pin 32K
  * @copyright    Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @license      The MIT License (MIT)
  * @author       [TangJie](jie.tang@dfrobot.com)

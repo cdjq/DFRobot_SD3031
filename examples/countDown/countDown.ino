@@ -1,6 +1,6 @@
 /*!
  * @file countDown.ino
- * @brief 运行这个例程，实现倒计时功能
+ * @brief Run this routine to implement countdown function
  * @copyright    Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @license      The MIT License (MIT)
  * @author       [TangJie](jie.tang@dfrobot.com)

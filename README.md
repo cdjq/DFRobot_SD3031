@@ -1,7 +1,7 @@
 # DFRobot_SD3031
 * [中文版](./README_CN.md)
 
-This SD3031 is a low-cost, extremely accurate I2C real-time clock(RTC) module. It can provide ±5%ppm accuracy (no more than 0.432s error) within the whole temperature range and lifespan, and is compatible with 2.5-5.5V wide voltage range. The current consumption of the module is only 2µA when powered by batteries. This module can be used to measure ambient temperature with ±3℃ accuracy.
+The SD3031 is a low-cost, extremely accurate I2C real-time clock(RTC) module. It can provide ±5%ppm accuracy (no more than 0.432s error) within the whole temperature range and lifespan, and is compatible with 2.5-5.5V wide voltage range. The current consumption of the module is only 2µA when powered by batteries. This module also can be used to measure ambient temperature with ±3℃ accuracy.
 
 
 ![产品效果图片](./resources/images/DFR0998.png)
@@ -22,8 +22,8 @@ This SD3031 is a low-cost, extremely accurate I2C real-time clock(RTC) module. I
 
 ## Summary
 
-  * Get real time, the initial time needs to be set by users, we can get compiling time, set it by ourselves, the minimum unit: s 
-  * Set alarm clock, users can set alarm clock and can get falling edge pulse at interrupt pin to trigger the alarm clock
+  * Get real time data. The initial time needs to be set by users. Users can set to get the compiling time. Minimum unit: s 
+  * Alarm clock. Users can set alarm time and get falling-edge pulse at interrupt pin to trigger the alarm clock
   * Measure the chip temperature, error: ±0.5℃
 
 ## Installation
@@ -49,7 +49,7 @@ To use this library, first download the library file, paste it into the \Arduino
 
   /**
    * @brief Set clock as 24-hour or 12-hour format
-   * @param mode Clock calculation method
+   * @param mode Clock time format
    */
   void setHourSystem(eHours_t mode){ _mode = mode; };
 

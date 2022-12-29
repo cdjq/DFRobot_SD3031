@@ -1,6 +1,6 @@
 /*!
  * @file control32k.ino
- * @brief Run this routine, control square wave output on pin 32K
+ * @brief Run this routine to control pin 32K to output square wave
  * @copyright    Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @license      The MIT License (MIT)
  * @author       [TangJie](jie.tang@dfrobot.com)

@@ -72,13 +72,13 @@ To use this library, first download the library file, paste it into the \Arduino
    * @fn setAlarmnumber
    * @brief Set the data for triggering alarm
    * @param trigger Interrupt select
-   * @param year 2000~2099
-   * @param month 1~12
-   * @param day 1~31
-   * @param week 0~6
-   * @param hour 0~23
-   * @param minute 0~59
-   * @param second 0~59
+   * @param year 2000-2099
+   * @param month 1-12
+   * @param day 1-31
+   * @param week 0-6
+   * @param hour 0-23
+   * @param minute 0-59
+   * @param second 0-59
    * @return None
    */
   void setAlarmnumber(eTrigger_t trigger, uint16_t year, uint8_t month, uint8_t day,eWeek_t week,uint8_t hour, uint8_t minute, uint8_t second);
@@ -122,7 +122,7 @@ To use this library, first download the library file, paste it into the \Arduino
   /**
    * @fn writeSRAM
    * @brief Write SRAM
-   * @param addr 0x14~0xFF
+   * @param addr 0x14-0xFF
    * @param data Write data
    * @return true indicates writing SRAM succeeded, false indicates writing SRAM failed
    */
@@ -147,7 +147,7 @@ To use this library, first download the library file, paste it into the \Arduino
   /**
    * @fn countDown
    * @brief Countdown
-   * @param second  countdown time 0~0xffffff
+   * @param second  countdown time 0-0xffffff
    */
   void countDown(uint32_t second);
 ```

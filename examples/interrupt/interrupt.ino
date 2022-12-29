@@ -24,10 +24,10 @@ void setup()
     }
     rtc.setHourSystem(rtc.e24hours);//Set display format
     rtc.setTime(2022,7,27,23,59,55);//Set default time
-    //Countdown timer, schedule alarm and daily timed alarm can't be used at the same time
+    //Countdown timer, schedule alarm and daily regular alarm can't be used at the same time
     //rtc.countDown(3);//Countdown
     //rtc.setAlarm(2022,7,28);//Set schedule alarm
-    rtc.setAlarm(rtc.eEveryDay,0,0,0);//Set daily timed alarm
+    rtc.setAlarm(rtc.eEveryDay,0,0,0);//Set daily regular alarm
 
     #if defined(ESP32)||defined(ARDUINO_SAM_ZERO)
       attachInterrupt(digitalPinToInterrupt(D7)/*Query the interrupt number of the D6 pin*/,interrupt,FALLING);

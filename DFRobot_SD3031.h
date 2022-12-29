@@ -256,8 +256,8 @@ private:
    * @fn readReg
    * @brief Read register function, designed as virtual function, implemented by derived class
    * @param reg  Register address 8bits
-   * @param pBuf Storage and buffer for data to be written
-   * @param size Length of data to be written
+   * @param pBuf Storage and buffer for data to be read
+   * @param size Length of data to be read
    * @return uint8_t type, indicates returning read register status
    * @retval 0 Reading succeeded
    * @retval 1 Reading failed

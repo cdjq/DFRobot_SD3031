@@ -62,6 +62,25 @@ class DFRobot_SD3031
   #define SD3031_REG_BAT_VAL       0x1A  ///< Battery Level
 
 public:
+
+  typedef enum{
+    eHz_0 = 0,
+    eHz_4096 = 2,
+    eHz_1024,
+    eHz_64,
+    eHz_32,
+    eHz_16,
+    eHz_8,
+    eHz_4,
+    eHz_2,
+    eHz_1,
+    eHz_1_2,
+    eHz_1_4,
+    eHz_1_8,
+    eHz_1_16,
+    eHz_1Second,
+  }eFrequency_t;
+
   /**
    * @enum  eHours_t
    * @brief  e24hours, e12hours
@@ -189,21 +208,36 @@ public:
    * @brief output AM or PM of time
    * @return AM or PM, return empty string for 24 hours mode
    */
-  String getAMorPM();
+  String getAMorPM(void);
 
   /**
    * @fn enable32k
    * @brief enable the 32k output 
    * @return None
    */
-  void enable32k();
+  void enable32k(void);
 
   /**
    * @fn disable32k
    * @brief disable the 32k output
    * @return None
    */
-  void disable32k();
+  void disable32k(void);
+
+  /**
+   * @fn enableFrequency
+   * @brief enable the frequency output 
+   * @param fr frequency 
+   * @return None
+   */
+  void enableFrequency(eFrequency_t fr);
+
+  /**
+   * @fn disableFrequency
+   * @brief disable the frequency output
+   * @return None
+   */
+  void disableFrequency(void);
 
   /**
    * @fn writeSRAM

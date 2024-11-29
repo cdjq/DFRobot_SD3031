@@ -119,6 +119,22 @@ To use this library, first download the library file, paste it into the \Arduino
    * @return None
    */
   void disable32k();
+  
+  /**
+   * @fn enableFrequency
+   * @brief enable the frequency output 
+   * @param fr frequency 
+   * @return None
+   */
+  void enableFrequency(eFrequency_t fr);
+
+  /**
+   * @fn disable1Hz
+   * @brief disable the frequency output
+   * @return None
+   */
+  void disableFrequency(void);
+
   /**
    * @fn writeSRAM
    * @brief Write SRAM

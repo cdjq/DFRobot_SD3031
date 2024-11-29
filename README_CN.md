@@ -119,6 +119,22 @@ SD3031是一款低成本、极其精确的I2C实时时钟(RTC)模块。在整个
    * @return 无
    */
   void disable32k();
+
+  /**
+   * @fn enableFrequency
+   * @brief 开启频率输出
+   * @param fr 频率选择
+   * @return 无
+   */
+  void enableFrequency(eFrequency_t fr);
+
+  /**
+   * @fn disableFrequency
+   * @brief 关闭1Hz输出
+   * @return 无
+   */
+  void disableFrequency(void);
+
   /**
    * @fn writeSRAM
    * @brief 写 SRAM
